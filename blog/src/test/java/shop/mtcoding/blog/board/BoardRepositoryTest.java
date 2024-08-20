@@ -1,5 +1,6 @@
 package shop.mtcoding.blog.board;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -18,7 +19,39 @@ public class BoardRepositoryTest {
     //테스트메서드에서는 매개변수를 사용할 수 없다
     // 메서드명_test  : 컨벤션
     // 따라가기, 코드들 조금씩 수정하면서 분석해 보기, 이론적 공부하기, 깊게 공부하기 해야 좋은 개발자가 될 수 있따.
-    //
+
+    @Test
+    public void updateById_test() {
+        //given
+        int id = 1;
+        String title = "제목 1 변경";
+        String content = "내용 1 변경";
+        // when
+        boardRepository.updateById(title, content, id);
+        // then
+        Board board = boardRepository.findById(id);
+        Assertions.assertThat(board.getTitle()).isEqualTo("제목 1 변경");
+    }
+
+    @Test
+    public void deleteById_test() {
+        // given
+        int id = 1;
+        // when
+        boardRepository.findById(id);
+
+        // eye
+        try {
+            boardRepository.findById(id);
+        } catch (Exception e) {
+            Assertions.assertThat(e.getMessage()).isEqualTo("게시글 id를 찾을 수 없습니다");
+        }
+
+        // then (코드)
+
+
+    }
+
     @Test
     public void findById_test() {
         // given
