@@ -21,6 +21,14 @@ public class BoardRepositoryTest {
     // 따라가기, 코드들 조금씩 수정하면서 분석해 보기, 이론적 공부하기, 깊게 공부하기 해야 좋은 개발자가 될 수 있따.
 
     @Test
+    public void findByIdV2_test() {
+        int id = 1;
+
+        Board board = boardRepository.findByIdV2(id);
+        System.out.println(board.getUser().getUsername());
+    }
+
+    @Test
     public void updateById_test() {
         //given
         int id = 1;
@@ -55,7 +63,7 @@ public class BoardRepositoryTest {
     @Test
     public void findById_test() {
         // given
-        int id = 6;
+        int id = 1;
         // when
         Board board = boardRepository.findById(id);
         // eye(then : 원래는 검증이 필요함 초보라서 눈으로 먼저 확인했어요)
@@ -66,15 +74,16 @@ public class BoardRepositoryTest {
 
     @Test
     public void findAll_test() {
-        // given
-        // 방금 작성한 findAll 메서드에 매개변수 존재 하지 않음으로 비워둠
-        // when
+
+        System.out.println("1. 첫번째 조회");
         List<Board> boardList = boardRepository.findAll();
+        System.out.println("--------------------");
         // eye
-        System.out.println("사이즈 : " + boardList.size());
-        for (Board board : boardList) {
-            System.out.println("타이틀 : " + board.getTitle() + "| 내용 : " + board.getContent());
-        }
+
+        System.out.println("userId : " + boardList.get(0).getUser().getId());
+
+        System.out.println("2. 레이지 로딩");
+        System.out.println("userName : " + boardList.get(0).getUser().getUsername());
     }
 
 

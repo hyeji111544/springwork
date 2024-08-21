@@ -57,6 +57,7 @@ public class BoardController {
     public String detail(@PathVariable("id") Integer id, HttpServletRequest request) {
         Board board = boardRepository.findById(id);
         request.setAttribute("model", board);
+        System.out.println(board.toString());
         return "board/detail";
     }
 

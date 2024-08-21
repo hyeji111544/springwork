@@ -31,13 +31,28 @@ public class BoardRepository {
     }
 
     public Board findById(int id) {
-        Query query = em.createNativeQuery("select * from board_tb where id = ?", Board.class);
-        query.setParameter(1, id);
+        //Query query = em.createNativeQuery("select bt.id as bt_id, ut.id as ut_id, * from board_tb bt inner join user_tb ut on bt.user_id = ut.id where bt.id=?", Board.class);
+        Query query = em.createQuery("select b from Board b join fetch b.user u where b.id = :id", Board.class); // 객체지향 쿼리
+        query.setParameter("id", id);
         try {
             Board board = (Board) query.getSingleResult(); // 다운캐스팅 필요
             return board;
         } catch (Exception e) {
             // 익세션을 내가 잡은것 까지 배움 - 처리 방법은 v2 에서 배우기
+            throw new RuntimeException("게시글 id를 찾을 수 없습니다");
+            //e.printStackTrace();
+        }
+    }
+
+    public Board findByIdV2(int id) {
+        Query query = em.createNativeQuery("select bt.id, bt.title, bt.content, bt.user_id, bt.created_at, ut.id u_id, ut.username, ut.password, ut.email, ut.created_at u_created_at from board_tb bt inner join user_tb ut on bt.user_id = ut.id where bt.id = ?", Board.class);
+        query.setParameter(1, id);
+        try {
+            Board board = (Board) query.getSingleResult();
+            return board;
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 익세션을 내가 잡은것 까지 배움 - 처리 방법은 v2에서 배우기
             throw new RuntimeException("게시글 id를 찾을 수 없습니다");
         }
     }
