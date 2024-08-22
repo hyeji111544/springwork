@@ -2,24 +2,24 @@ package shop.mtcoding.blog.board;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import shop.mtcoding.blog.user.User;
 
 import java.util.List;
 
 // SRP : 식별자 요청받기 , 응답하기
+@RequiredArgsConstructor
 @Controller // 식별자 요청 받을 수 있다.
 public class BoardController {
 
-    @Autowired
-    private BoardRepository boardRepository;
-
-    @Autowired
-    private HttpSession session; //싱글톤 객체라 IoC 에 넣기 가능
+    private final BoardRepository boardRepository;
+    private final HttpSession session; //싱글톤 객체라 IoC 에 넣기 가능
+    private final BoardService boardService;
 
     // url : http://localhost:8080/board/1/update
     // body : title=제목 1 변경 & content = 내용 1 변경
@@ -39,8 +39,14 @@ public class BoardController {
     }
 
     @PostMapping("/board/save")
-    public String save(@RequestParam("title") String title, @RequestParam("content") String content) { //스프링 기본 전략 = x-www-form-urlencoded 작성 /보드 레포지토리 객체는 ioc 에 있음 따라서 autowired 함
-        boardRepository.save(title, content);
+    public String save(BoardRequest.SaveDTO saveDTO) { //스프링 기본 전략 = x-www-form-urlencoded 작성 /보드 레포지토리 객체는 ioc 에 있음 따라서 autowired 함
+        User sessionUser = (User) session.getAttribute("sessionUser");
+
+        if (sessionUser == null) {
+            throw new RuntimeException("로그인이 필요헙니다.");
+        }
+
+        boardRepository.save(saveDTO.toEntity(sessionUser));
         return "redirect:/board";
     }
 
@@ -55,9 +61,15 @@ public class BoardController {
 
     @GetMapping("/board/{id}")
     public String detail(@PathVariable("id") Integer id, HttpServletRequest request) {
-        Board board = boardRepository.findById(id);
-        request.setAttribute("model", board);
-        System.out.println(board.toString());
+        //    Board board = boardRepository.findById(id);
+        //    request.setAttribute("model", board);
+        //    request.setAttribute("isOwner", false);
+        User sessionUser = (User) session.getAttribute("sessionUser");
+
+        BoardResponse.DetailDTO detailDTO = boardService.상세보기(id, sessionUser);
+        System.out.println(detailDTO.getUsername());
+        System.out.println(detailDTO.getIsOwner());
+        request.setAttribute("model", detailDTO);
         return "board/detail";
     }
 
@@ -71,6 +83,14 @@ public class BoardController {
         Board board = boardRepository.findById(id);
         request.setAttribute("model", board);
         return "board/update-form";
+    }
+
+    @GetMapping("/test/board/1")
+    public void testBoard() {
+        List<Board> boardList = boardRepository.findAll();
+        System.out.println("---------------------------------------------");
+        System.out.println(boardList.get(2).getUser().getPassword());
+        System.out.println("---------------------------------------------");
     }
 
 }

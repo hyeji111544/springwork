@@ -93,7 +93,7 @@ public class BoardRepositoryTest {
         String title = "제목";
         String content = "내용 1";
         // 2. when
-        boardRepository.save(title, content);
+        boardRepository.save(Board.builder().title(title).content(content).build());
         // 3. eye(눈으로 확인)
     }
 }
