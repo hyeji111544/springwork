@@ -14,6 +14,7 @@ public class BoardRepository {
 
     private final EntityManager em;
 
+
     @Transactional
     public void updateById(String title, String content, int id) {
         Query query = em.createNativeQuery("update board_tb set title =?, content =? where id =?");
@@ -62,7 +63,7 @@ public class BoardRepository {
         List<Board> boardList = query.getResultList();
         return boardList;
     }
-    
+
 
     //1. insert 하기
     @Transactional

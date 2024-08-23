@@ -13,6 +13,13 @@ class UserRepositoryTest {
     private UserRepository userRepository;
 
     @Test
+    public void findByUsername() {
+        String username = "haha";
+        User user = userRepository.findByUsername(username);
+        System.out.println("user = " + user);
+    }
+
+    @Test
     public void findByUsernameAndPassword_test() {
         String username = "love";
         String password = "1234";

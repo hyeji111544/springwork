@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final HttpSession session;
 
 
@@ -22,15 +22,15 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(UserRequest.LoginDTO loginDTO) {
-        User sessionUser = userRepository.findByUsernameAndPassword(loginDTO.getUsername(), loginDTO.getPassword());
+        User sessionUser = userService.로그인(loginDTO);
         session.setAttribute("sessionUser", sessionUser);
         return "redirect:/board";
     }
 
     @PostMapping("/join")
     public String join(UserRequest.JoinDTO joinDTO) {
-        userRepository.save(joinDTO.toEntity());
-        return "user/join-form";
+        userService.회원가입(joinDTO);
+        return "user/login-form";
     }
 
     @GetMapping("/join-form")
