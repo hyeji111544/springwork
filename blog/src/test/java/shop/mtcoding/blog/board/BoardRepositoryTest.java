@@ -1,5 +1,6 @@
 package shop.mtcoding.blog.board;
 
+import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,29 @@ public class BoardRepositoryTest {
     @Autowired
     private BoardRepository boardRepository;
 
+    @Autowired
+    private EntityManager em;
+
     //테스트메서드에서는 매개변수를 사용할 수 없다
     // 메서드명_test  : 컨벤션
     // 따라가기, 코드들 조금씩 수정하면서 분석해 보기, 이론적 공부하기, 깊게 공부하기 해야 좋은 개발자가 될 수 있따.
 
     @Test
+    public void updateByIdV2_test() {
+        // given
+        int id = 1;
+        Board board = boardRepository.findById(id);
+
+        // when
+        board.setTitle("제목10");
+        board.setContent("내용10");
+
+        // 트랜잭션이 종료되면 flush()
+        em.flush();
+    }
+
+    @Test
+
     public void findByIdV2_test() {
         int id = 1;
 

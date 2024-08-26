@@ -15,6 +15,7 @@ public class BoardResponse {
         private String username;
         private Boolean isOwner;
 
+
         public DetailDTO(Board board, User sessionUser) {
             this.boardId = board.getId();
             this.title = board.getTitle();
@@ -25,9 +26,12 @@ public class BoardResponse {
 
             this.isOwner = false;
 
-            if (board.getUser().getId() == sessionUser.getId()) {
-                isOwner = true;
+            if (sessionUser != null) {
+                if (board.getUser().getId() == sessionUser.getId()) {
+                    isOwner = true;
+                }
             }
+            
         }
     }
 
