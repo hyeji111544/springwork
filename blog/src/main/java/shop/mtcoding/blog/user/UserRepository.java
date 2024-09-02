@@ -2,7 +2,6 @@ package shop.mtcoding.blog.user;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import shop.mtcoding.blog.core.error.ex.Exception401;
@@ -39,7 +38,7 @@ public class UserRepository {
     }
 
     //레포지토리에는 기능 명 넣지x, 하이버네이트로 넣을거임
-    @Transactional
+
     public void save(User user) {
         System.out.println("전 : " + user.getUsername());
         em.persist(user);

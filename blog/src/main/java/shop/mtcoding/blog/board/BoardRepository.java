@@ -15,7 +15,6 @@ public class BoardRepository {
     private final EntityManager em;
 
 
-    @Transactional
     public void updateById(String title, String content, int id) {
         Query query = em.createNativeQuery("update board_tb set title =?, content =? where id =?");
         query.setParameter(1, title);
@@ -24,7 +23,7 @@ public class BoardRepository {
         query.executeUpdate();
     }
 
-    @Transactional
+    
     public void deleteById(int id) {
         Query query = em.createNativeQuery("delete from board_tb where id=?");
         query.setParameter(1, id);
